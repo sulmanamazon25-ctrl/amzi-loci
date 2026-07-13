@@ -15,7 +15,9 @@ apps/desktop/src-tauri/target/
 packages/database/prisma/*.db
 packages/database/prisma/*.db-journal
 
-# IDE
+scripts/*.local
+*.local
+
 .idea/
 .vscode/
 *.swp
