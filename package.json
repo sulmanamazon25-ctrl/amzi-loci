@@ -1,0 +1,19 @@
+{
+  "name": "amzi-loci",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BYOK local-first Amazon listing asset generator",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @amzi-loci/server-a --filter @amzi-loci/desktop dev",
+    "dev:server": "pnpm --filter @amzi-loci/server-a dev",
+    "dev:desktop": "pnpm --filter @amzi-loci/desktop dev",
+    "build": "pnpm -r build",
+    "db:generate": "pnpm --filter @amzi-loci/database generate",
+    "db:migrate": "pnpm --filter @amzi-loci/database migrate:dev",
+    "db:migrate:deploy": "pnpm --filter @amzi-loci/database migrate:deploy",
+    "db:studio": "pnpm --filter @amzi-loci/database studio"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

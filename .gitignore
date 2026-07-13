@@ -1,0 +1,22 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+Thumbs.db
+
+# Tauri
+apps/desktop/src-tauri/target/
+
+# Prisma
+packages/database/prisma/*.db
+packages/database/prisma/*.db-journal
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
