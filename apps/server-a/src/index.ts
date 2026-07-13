@@ -3,6 +3,10 @@ import cors from "@fastify/cors";
 import { pingDatabase } from "@amzi-loci/database";
 import type { HealthResponse, ApiInfoResponse } from "@amzi-loci/shared";
 import { registerInsightRoutes } from "./routes/insights.js";
+import { registerBrandKitRoutes } from "./routes/brandkit.js";
+import { registerImageRoutes } from "./routes/images.js";
+import { registerStudioRoutes } from "./routes/studio.js";
+import { registerLicenseRoutes } from "./routes/license.js";
 
 const port = Number(process.env.PORT) || 3000;
 const host = "0.0.0.0";
@@ -18,6 +22,10 @@ await app.register(cors, {
 });
 
 await registerInsightRoutes(app);
+await registerBrandKitRoutes(app);
+await registerImageRoutes(app);
+await registerStudioRoutes(app);
+await registerLicenseRoutes(app);
 
 app.get("/health", async (_request, reply) => {
   const dbConnected = await pingDatabase();
@@ -34,9 +42,9 @@ app.get("/health", async (_request, reply) => {
 
 app.get("/", async (_request, reply) => {
   const body: ApiInfoResponse = {
-    message: "Amzi Loci API — Phase 0 skeleton",
+    message: "Amzi Loci API — Phase 7",
     service: "amzi-loci",
-    version: "0.3.0",
+    version: "0.8.0",
   };
 
   return reply.status(200).send(body);

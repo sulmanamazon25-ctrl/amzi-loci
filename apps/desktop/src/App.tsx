@@ -1,12 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
-import type { HealthResponse } from "@amzi-loci/shared";
+import type { HealthResponse, LicenseValidation } from "@amzi-loci/shared";
 import { SERVER_A_DEFAULT_URL } from "@amzi-loci/shared";
 import { Settings } from "./components/Settings";
 import { Workflow } from "./components/Workflow";
+import { BrandKits } from "./components/BrandKits";
+import { Studio } from "./components/Studio";
+import { LicenseGate } from "./components/LicenseGate";
+import { getUsageSummary } from "./lib/export";
+import { validateLicense } from "./lib/license";
+import type { UsageSummary } from "@amzi-loci/shared";
 import "./App.css";
 
 type ConnectionState = "checking" | "connected" | "disconnected";
-type Tab = "home" | "workflow" | "settings";
+type Tab = "home" | "workflow" | "brandkits" | "studio" | "settings";
 
 const serverUrl = import.meta.env.VITE_SERVER_A_URL ?? SERVER_A_DEFAULT_URL;
 
@@ -15,6 +21,24 @@ function App() {
   const [connection, setConnection] = useState<ConnectionState>("checking");
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [usage, setUsage] = useState<UsageSummary | null>(null);
+  const [license, setLicense] = useState<LicenseValidation | null>(null);
+  const [licenseLoading, setLicenseLoading] = useState(true);
+  const [licenseError, setLicenseError] = useState<string | null>(null);
+
+  const refreshLicense = useCallback(async () => {
+    setLicenseLoading(true);
+    setLicenseError(null);
+    try {
+      const result = await validateLicense(serverUrl);
+      setLicense(result);
+    } catch (err) {
+      setLicense(null);
+      setLicenseError(err instanceof Error ? err.message : "License check failed");
+    } finally {
+      setLicenseLoading(false);
+    }
+  }, []);
 
   const checkHealth = useCallback(async () => {
     setConnection("checking");
@@ -38,7 +62,11 @@ function App() {
 
   useEffect(() => {
     void checkHealth();
-  }, [checkHealth]);
+    void refreshLicense();
+    void getUsageSummary()
+      .then(setUsage)
+      .catch(() => setUsage(null));
+  }, [checkHealth, refreshLicense]);
 
   const statusLabel =
     connection === "checking"
@@ -47,12 +75,50 @@ function App() {
         ? "Connected"
         : "Disconnected";
 
+  const canUseStudio = license?.features.studio ?? false;
+
+  if (licenseLoading) {
+    return (
+      <main className="app">
+        <header className="header">
+          <h1>Amzi Loci</h1>
+          <p className="subtitle">Amazon listing asset generator</p>
+        </header>
+        <p className="hint">Checking license…</p>
+      </main>
+    );
+  }
+
+  if (license && !license.valid) {
+    return (
+      <LicenseGate
+        serverUrl={serverUrl}
+        license={license}
+        error={licenseError}
+        onLicenseChange={(next) => {
+          setLicense(next);
+          if (next.valid) setLicenseError(null);
+        }}
+      />
+    );
+  }
+
   return (
     <main className="app">
       <header className="header">
         <h1>Amzi Loci</h1>
         <p className="subtitle">Amazon listing asset generator</p>
       </header>
+
+      {license?.status === "trialing" && (
+        <div className="trial-banner">{license.message}</div>
+      )}
+
+      {licenseError && (
+        <div className="trial-banner warning">
+          License check failed — {licenseError}. Workflow may be limited until the server is reachable.
+        </div>
+      )}
 
       <nav className="tabs">
         <button
@@ -71,6 +137,22 @@ function App() {
         </button>
         <button
           type="button"
+          className={tab === "brandkits" ? "tab active" : "tab"}
+          onClick={() => setTab("brandkits")}
+        >
+          Brand kits
+        </button>
+        {canUseStudio && (
+          <button
+            type="button"
+            className={tab === "studio" ? "tab active" : "tab"}
+            onClick={() => setTab("studio")}
+          >
+            Studio
+          </button>
+        )}
+        <button
+          type="button"
           className={tab === "settings" ? "tab active" : "tab"}
           onClick={() => setTab("settings")}
         >
@@ -86,6 +168,23 @@ function App() {
           </div>
 
           <p className="server-url">{serverUrl}</p>
+
+          {license && (
+            <dl className="health-details">
+              <div>
+                <dt>License</dt>
+                <dd>
+                  {license.plan} ({license.status})
+                </dd>
+              </div>
+              {license.trialEndsAt && (
+                <div>
+                  <dt>Trial ends</dt>
+                  <dd>{new Date(license.trialEndsAt).toLocaleDateString()}</dd>
+                </div>
+              )}
+            </dl>
+          )}
 
           {health && (
             <dl className="health-details">
@@ -109,11 +208,28 @@ function App() {
           <button type="button" className="retry-btn" onClick={() => void checkHealth()}>
             Retry connection
           </button>
+
+          {usage && usage.entries.length > 0 && (
+            <dl className="health-details usage-home">
+              <div>
+                <dt>Est. API spend (local log)</dt>
+                <dd>${usage.totalEstimatedCostUsd.toFixed(2)}</dd>
+              </div>
+              <div>
+                <dt>Images generated</dt>
+                <dd>{usage.totalImagesGenerated}</dd>
+              </div>
+            </dl>
+          )}
         </section>
       ) : tab === "workflow" ? (
         <Workflow />
+      ) : tab === "brandkits" ? (
+        <BrandKits />
+      ) : tab === "studio" && canUseStudio ? (
+        <Studio />
       ) : (
-        <Settings />
+        <Settings serverUrl={serverUrl} onLicenseChange={setLicense} />
       )}
     </main>
   );

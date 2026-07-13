@@ -8,6 +8,8 @@ import {
   type ApiProvider,
   type KeyStatus,
 } from "../lib/apiKeys";
+import type { LicenseValidation } from "@amzi-loci/shared";
+import { LicensePanel } from "./LicensePanel";
 
 type ProviderState = {
   input: string;
@@ -15,6 +17,11 @@ type ProviderState = {
   saving: boolean;
   message: string | null;
   error: string | null;
+};
+
+type Props = {
+  serverUrl: string;
+  onLicenseChange?: (license: LicenseValidation) => void;
 };
 
 const emptyProviderState = (): ProviderState => ({
@@ -25,7 +32,7 @@ const emptyProviderState = (): ProviderState => ({
   error: null,
 });
 
-export function Settings() {
+export function Settings({ serverUrl, onLicenseChange }: Props) {
   const [statuses, setStatuses] = useState<KeyStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [providerState, setProviderState] = useState<Record<ApiProvider, ProviderState>>({
@@ -119,6 +126,12 @@ export function Settings() {
 
   return (
     <section className="settings">
+      <LicensePanel
+        serverUrl={serverUrl}
+        compact
+        onLicenseChange={onLicenseChange}
+      />
+
       <div className="settings-intro">
         <h2>BYOK API Keys</h2>
         <p>

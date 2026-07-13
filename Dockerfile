@@ -10,6 +10,11 @@ RUN npm install --omit=dev
 COPY docker/server.mjs ./server.mjs
 COPY docker/insights.mjs ./insights.mjs
 COPY docker/prompts.mjs ./prompts.mjs
+COPY docker/brandkit.mjs ./brandkit.mjs
+COPY docker/images.mjs ./images.mjs
+COPY docker/text-llm.mjs ./text-llm.mjs
+COPY docker/studio.mjs ./studio.mjs
+COPY docker/license.mjs ./license.mjs
 
 ENV NODE_ENV=production
 ENV PORT=3000

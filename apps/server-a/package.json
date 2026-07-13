@@ -13,7 +13,8 @@
     "@amzi-loci/database": "workspace:*",
     "@amzi-loci/shared": "workspace:*",
     "@fastify/cors": "^10.0.2",
-    "fastify": "^5.2.1"
+    "fastify": "^5.2.1",
+    "stripe": "^17.7.0"
   },
   "devDependencies": {
     "@types/node": "^22.12.0",

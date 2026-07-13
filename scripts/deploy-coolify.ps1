@@ -151,7 +151,7 @@ if (-not $app) {
     git_repository       = $gitRepo
     git_branch           = "main"
     build_pack           = "dockerfile"
-    dockerfile_location  = "/apps/server-a/Dockerfile"
+    dockerfile_location  = "/Dockerfile"
     base_directory       = "/"
     ports_exposes        = "3000"
     name                 = "amzi-loci-api"
@@ -169,6 +169,7 @@ Set-AppEnv $appUuid "DATABASE_URL" $databaseUrl
 Set-AppEnv $appUuid "NODE_ENV" "production"
 Set-AppEnv $appUuid "PORT" "3000"
 Set-AppEnv $appUuid "REDIS_URL" "redis://localhost:6379"
+Set-AppEnv $appUuid "LICENSE_DEV_MODE" "true"
 
 try {
   Invoke-Coolify PATCH "/applications/$appUuid" @{ domains = $Domain } | Out-Null

@@ -12,6 +12,34 @@ model User {
   id        String   @id @default(cuid())
   email     String?  @unique
   createdAt DateTime @default(now())
+  licenses  License[]
+}
+
+model License {
+  id                   String    @id @default(cuid())
+  email                String?
+  plan                 String
+  status               String
+  stripeCustomerId     String?   @unique
+  stripeSubscriptionId String?   @unique
+  expiresAt            DateTime?
+  maxDevices           Int       @default(1)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  userId               String?
+  user                 User?     @relation(fields: [userId], references: [id])
+  devices              Device[]
+}
+
+model Device {
+  id          String   @id @default(cuid())
+  fingerprint String   @unique
+  label       String?
+  trialEndsAt DateTime?
+  licenseId   String?
+  license     License? @relation(fields: [licenseId], references: [id])
+  lastSeenAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
 }
 
 model AppMeta {
