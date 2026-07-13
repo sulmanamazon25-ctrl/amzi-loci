@@ -12,3 +12,29 @@ export type ApiInfoResponse = {
   service: string;
   version: string;
 };
+
+export type ApiProvider = "anthropic" | "openai" | "google";
+
+export type Sentiment = "positive" | "negative" | "neutral" | "mixed";
+
+export type ProductInsight = {
+  id: string;
+  feature: string;
+  sentiment: Sentiment;
+  conversionDriver: boolean;
+  sourceQuote: string;
+  confidence: number;
+};
+
+export type ExtractInsightsRequest = {
+  reviews: string[];
+  provider: ApiProvider;
+};
+
+export type ExtractInsightsResponse = {
+  insights: ProductInsight[];
+  model: string;
+  reviewCount: number;
+};
+
+export const API_PROVIDERS: ApiProvider[] = ["anthropic", "openai", "google"];

@@ -2,10 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import type { HealthResponse } from "@amzi-loci/shared";
 import { SERVER_A_DEFAULT_URL } from "@amzi-loci/shared";
 import { Settings } from "./components/Settings";
+import { Workflow } from "./components/Workflow";
 import "./App.css";
 
 type ConnectionState = "checking" | "connected" | "disconnected";
-type Tab = "home" | "settings";
+type Tab = "home" | "workflow" | "settings";
 
 const serverUrl = import.meta.env.VITE_SERVER_A_URL ?? SERVER_A_DEFAULT_URL;
 
@@ -63,6 +64,13 @@ function App() {
         </button>
         <button
           type="button"
+          className={tab === "workflow" ? "tab active" : "tab"}
+          onClick={() => setTab("workflow")}
+        >
+          Workflow
+        </button>
+        <button
+          type="button"
           className={tab === "settings" ? "tab active" : "tab"}
           onClick={() => setTab("settings")}
         >
@@ -102,6 +110,8 @@ function App() {
             Retry connection
           </button>
         </section>
+      ) : tab === "workflow" ? (
+        <Workflow />
       ) : (
         <Settings />
       )}

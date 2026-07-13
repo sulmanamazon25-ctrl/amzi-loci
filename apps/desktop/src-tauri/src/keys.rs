@@ -72,6 +72,13 @@ fn validate_provider(provider: &str) -> Result<(), String> {
     }
 }
 
+pub fn get_stored_key(provider: &str) -> Result<String, String> {
+    validate_provider(provider)?;
+    entry(provider)?
+        .get_password()
+        .map_err(|e| e.to_string())
+}
+
 pub async fn test_api_key(provider: &str, key: &str) -> Result<String, String> {
     validate_provider(provider)?;
     let trimmed = key.trim();
