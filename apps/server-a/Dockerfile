@@ -6,14 +6,11 @@ WORKDIR /app
 
 FROM base AS builder
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
-COPY packages/shared ./packages/shared
-COPY packages/database ./packages/database
+COPY packages ./packages
 COPY apps/server-a ./apps/server-a
 RUN pnpm install --frozen-lockfile=false
-RUN pnpm --filter @amzi-loci/shared build \
- && pnpm --filter @amzi-loci/database generate \
- && pnpm --filter @amzi-loci/database build \
- && pnpm --filter @amzi-loci/server-a build
+RUN pnpm --filter @amzi-loci/server-a... build
+RUN pnpm deploy --filter @amzi-loci/server-a --prod /prod/server-a
 
 FROM node:20-alpine AS runner
 WORKDIR /app
@@ -24,15 +21,9 @@ ENV PORT=3000
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 appuser
 
-COPY --from=builder /app/apps/server-a/dist ./dist
-COPY --from=builder /app/apps/server-a/package.json ./package.json
+COPY --from=builder /prod/server-a ./
 COPY --from=builder /app/apps/server-a/docker-entrypoint.sh ./docker-entrypoint.sh
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/packages/database ./packages/database
-COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
-COPY --from=builder /app/packages/database/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/packages/database/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/packages/database/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
 
 RUN chmod +x /app/docker-entrypoint.sh
 

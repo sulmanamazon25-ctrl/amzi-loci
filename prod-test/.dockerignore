@@ -1,0 +1,11 @@
+# Monorepo build context — copy from repo root when building:
+#   docker build -f apps/server-a/Dockerfile .
+node_modules
+dist
+.env
+.env.*
+!.env.example
+*.log
+.git
+apps/desktop/src-tauri/target
+apps/desktop/dist
