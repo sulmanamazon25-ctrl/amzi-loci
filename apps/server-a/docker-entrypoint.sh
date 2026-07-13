@@ -2,12 +2,11 @@
 set -e
 
 echo "Running database migrations..."
-if [ -f /app/packages/database/prisma/schema.prisma ]; then
-  npx prisma migrate deploy --schema=./node_modules/@amzi-loci/database/prisma/schema.prisma || \
-  npx prisma migrate deploy --schema=./packages/database/prisma/schema.prisma || \
-else
-  echo "WARN: Prisma schema not found, skipping migrations"
-fi
+for schema in ./node_modules/@amzi-loci/database/prisma/schema.prisma ./packages/database/prisma/schema.prisma; do
+  if [ -f "$schema" ]; then
+    npx prisma migrate deploy --schema="$schema" && break
+  fi
+done || echo "WARN: migrations skipped"
 
 echo "Starting API server..."
 exec node ./dist/index.js
