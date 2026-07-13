@@ -9,7 +9,7 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
 COPY packages/shared ./packages/shared
 COPY packages/database ./packages/database
 COPY apps/server-a ./apps/server-a
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile=false
 RUN pnpm --filter @amzi-loci/shared build \
  && pnpm --filter @amzi-loci/database generate \
  && pnpm --filter @amzi-loci/database build \

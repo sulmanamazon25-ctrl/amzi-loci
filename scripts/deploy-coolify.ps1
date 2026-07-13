@@ -1,4 +1,4 @@
-# Amzi Loci — deploy to Coolify on Server A (46.62.226.89)
+# Amzi Loci - deploy to Coolify on Server A (46.62.226.89)
 #
 #   cd "E:\amzi loci"
 #   .\scripts\deploy-coolify.ps1
@@ -64,7 +64,7 @@ function Set-AppEnv {
   Write-Host "  OK $Key" -ForegroundColor Green
 }
 
-Write-Host "=== Amzi Loci — Coolify deploy ===" -ForegroundColor Cyan
+Write-Host "=== Amzi Loci - Coolify deploy ===" -ForegroundColor Cyan
 
 # Project
 $projects = Invoke-Coolify GET "/projects"
@@ -73,7 +73,7 @@ if (-not $project) {
   Write-Host "Creating project amzi-loci..." -ForegroundColor Yellow
   $project = Invoke-Coolify POST "/projects" @{
     name        = "amzi-loci"
-    description = "BYOK Amazon listing asset generator — Phase 0"
+    description = "BYOK Amazon listing asset generator - Phase 0"
   }
 }
 $projectUuid = $project.uuid
