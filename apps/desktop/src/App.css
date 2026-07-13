@@ -133,3 +133,124 @@ body {
   color: #e8eaed;
   margin-bottom: 0.25rem;
 }
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  border: 1px solid #2d3139;
+  border-radius: 8px;
+  background: #161b22;
+  color: #9aa0a6;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.tab.active {
+  color: #e8eaed;
+  border-color: #4f8cff;
+  background: #1a2332;
+}
+
+.settings {
+  margin-top: 1.5rem;
+}
+
+.settings-intro h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.settings-intro p,
+.muted {
+  color: #9aa0a6;
+  font-size: 0.9rem;
+}
+
+.provider-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.provider-card {
+  padding: 1rem;
+  border: 1px solid #2d3139;
+  border-radius: 12px;
+  background: #161b22;
+}
+
+.provider-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.provider-header h3 {
+  font-size: 1rem;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+  color: #9aa0a6;
+}
+
+.text-input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #3d4450;
+  border-radius: 8px;
+  background: #0f1117;
+  color: #e8eaed;
+  font-size: 0.9rem;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.primary-btn,
+.secondary-btn,
+.danger-btn {
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #3d4450;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.primary-btn {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+.secondary-btn,
+.retry-btn {
+  background: #21262d;
+  color: #e8eaed;
+}
+
+.danger-btn {
+  background: #3f1515;
+  border-color: #7f1d1d;
+  color: #fecaca;
+}
+
+.success {
+  margin-top: 0.75rem;
+  color: #4ade80;
+  font-size: 0.9rem;
+}
