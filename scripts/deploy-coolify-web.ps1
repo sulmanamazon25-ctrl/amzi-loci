@@ -121,6 +121,16 @@ try {
   Write-Host "Domain patch: $($_.Exception.Message)" -ForegroundColor DarkYellow
 }
 
+# Marketing site owns amzi-loci.* — move API app to its production sslip.io hostname
+$apiAppUuid = "bn24wqvv523uscic52mscga6"
+$apiDomain = "https://iz1yfanbxaefgipk6e1k3o20.46-62-226-89.sslip.io"
+try {
+  Invoke-Coolify PATCH "/applications/$apiAppUuid" @{ domains = $apiDomain } | Out-Null
+  Write-Host "API domain: $apiDomain (freed amzi-loci for web)" -ForegroundColor DarkGray
+} catch {
+  Write-Host "API domain patch: $($_.Exception.Message)" -ForegroundColor DarkYellow
+}
+
 $domain = $Domain
 
 # Fetch assigned domain (Coolify sslip.io)
