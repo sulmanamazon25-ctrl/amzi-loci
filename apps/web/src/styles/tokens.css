@@ -1,0 +1,35 @@
+:root {
+  --bg: #09090b;
+  --surface: #111318;
+  --card: #171a21;
+  --border: #252a33;
+  --border-hover: #333944;
+  --primary: #4f46e5;
+  --primary-hover: #6366f1;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --text: #f9fafb;
+  --text-muted: #9ca3af;
+  --radius-card: 16px;
+  --radius-input: 12px;
+  --radius-button: 12px;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--primary);
+  color: white;
+}

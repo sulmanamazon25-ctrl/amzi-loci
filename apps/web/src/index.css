@@ -1,0 +1,29 @@
+@import "./styles/tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  #root {
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-6;
+  }
+  .prose-page {
+    @apply max-w-3xl space-y-4 text-body leading-relaxed text-text-muted;
+  }
+  .prose-page h2 {
+    @apply mt-8 text-section font-medium text-text;
+  }
+  .prose-page ul {
+    @apply list-disc space-y-2 pl-5;
+  }
+}
