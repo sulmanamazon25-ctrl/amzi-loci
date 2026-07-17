@@ -1,11 +1,10 @@
-# Download installers
+# Windows installers for amziloci.com/download
 
-Place Windows installers here before building the marketing site:
+Copy from the repo build output before deploy:
 
-- Amzi-Loci-0.11.0-setup.exe
-- Amzi-Loci-0.11.0.msi
-- Amzi-Loci-0.11.0-portable.exe
+    .\scripts\sync-web-downloads.ps1
 
-Copy from `E:\amzi loci\dist\` after running `pnpm tauri build`.
+Source folder: `dist/` (Amzi-Loci-0.11.0-*.exe / .msi)
+Served at: https://amziloci.com/downloads/
 
-These files are served at `/downloads/` on the marketing site.
+Large binaries are gitignored; sync + deploy uploads them to the live server.

@@ -46,10 +46,6 @@ export function DownloadPage() {
             </Card>
           ))}
         </div>
-        <p className="mt-6 text-body text-text-muted">
-          Installers are hosted at <code className="text-text">{DOWNLOAD_BASE_URL}/</code>. Upload
-          files from your build output before deploying the marketing site, or use GitHub Releases.
-        </p>
       </section>
 
       <section className="container-page pb-20">
