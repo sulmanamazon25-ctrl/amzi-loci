@@ -50,40 +50,6 @@ function Invoke-Coolify {
   return Invoke-RestMethod -Method $Method -Uri $uri -Headers $headers -TimeoutSec 300
 }
 
-function Publish-WebDownloads {
-  param(
-    [string]$ServerHost = "46.62.226.89",
-    [string]$AppUuid = "qcm3ty60xclqrylk6so8roys",
-    [string]$DownloadsDir = (Join-Path $RepoRoot "apps\web\public\downloads")
-  )
-
-  $files = Get-ChildItem $DownloadsDir -Include *.exe, *.msi -File -ErrorAction SilentlyContinue
-  if (-not $files -or $files.Count -eq 0) {
-    Write-Host "No installers to upload in $DownloadsDir" -ForegroundColor DarkYellow
-    return
-  }
-
-  Write-Host "Uploading installers to server..." -ForegroundColor Cyan
-  $remoteTmp = "/tmp/amzi-loci-downloads-$AppUuid"
-  ssh -o StrictHostKeyChecking=accept-new "root@${ServerHost}" "mkdir -p $remoteTmp" 2>$null
-  if ($LASTEXITCODE -ne 0) {
-    Write-Host "SSH upload skipped (no root access). Copy manually to the running container downloads folder." -ForegroundColor DarkYellow
-    return
-  }
-
-  scp -q ($files | ForEach-Object { $_.FullName }) "root@${ServerHost}:${remoteTmp}/"
-  $remoteScript = @"
-CID=`$(docker ps -q --filter name=$AppUuid | head -1)
-if [ -z "`$CID" ]; then echo 'container not found'; exit 1; fi
-docker exec `$CID mkdir -p /usr/share/nginx/html/downloads
-docker cp ${remoteTmp}/. `$CID:/usr/share/nginx/html/downloads/
-docker exec `$CID ls -lh /usr/share/nginx/html/downloads/
-rm -rf ${remoteTmp}
-"@
-  ssh "root@${ServerHost}" $remoteScript
-  Write-Host "Installers uploaded to live site /downloads/" -ForegroundColor Green
-}
-
 Write-Host "=== Amzi Loci Web - Coolify deploy ===" -ForegroundColor Cyan
 Write-Host "Project:     $ProjectUuid"
 Write-Host "Environment: $EnvironmentUuid"
@@ -189,9 +155,7 @@ if (-not $SkipDeploy) {
   $deployUri = ('{0}/api/v1/deploy?uuid={1}&force=true' -f $CoolifyBase, $appUuid)
   Invoke-RestMethod -Method GET -Uri $deployUri -Headers $headers -TimeoutSec 120 | Out-Null
   Write-Host "Deploy queued." -ForegroundColor Green
-  Write-Host "Waiting for container (90s)..." -ForegroundColor DarkGray
-  Start-Sleep -Seconds 90
-  Publish-WebDownloads -AppUuid $appUuid
+  Write-Host "Installers are fetched from GitHub Release v0.11.0 during Docker build." -ForegroundColor DarkGray
 }
 
 # Update docs with domain if known
