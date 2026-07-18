@@ -12,6 +12,7 @@ import { PageMeta } from "../components/layout/PageMeta";
 import { Hero } from "../components/marketing/Hero";
 import { FeatureGrid } from "../components/marketing/FeatureGrid";
 import { WorkflowSteps } from "../components/marketing/WorkflowSteps";
+import { ProductVideo } from "../components/marketing/ProductVideo";
 import { ButtonLink } from "../components/ui/button";
 import { Panel } from "../components/ui/card";
 
@@ -30,6 +31,10 @@ export function HomePage() {
         primaryCta={{ to: "/download", label: "Download for Windows" }}
         secondaryCta={{ to: "/features", label: "See how it works" }}
       />
+
+      <section className="container-page pb-16">
+        <ProductVideo title="See how it works" />
+      </section>
 
       <section className="container-page pb-20">
         <h2 className="text-heading font-semibold">Six steps. One upload pack.</h2>
@@ -92,7 +97,10 @@ export function HomePage() {
           <div>
             <h2 className="text-heading font-semibold">Ready to ship your next listing?</h2>
             <p className="mt-2 max-w-xl text-body text-text-muted">
-              Download the desktop app, add your API keys, and run your first project in under 30 minutes.
+              Download the desktop app, add your API keys, and run your first project in under 30 minutes.{" "}
+              <a href="/byok-setup" className="text-primary-hover hover:underline">
+                BYOK setup guide
+              </a>
             </p>
           </div>
           <div className="flex gap-3">

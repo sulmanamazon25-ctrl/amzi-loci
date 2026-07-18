@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { PageMeta } from "../components/layout/PageMeta";
 import { Hero } from "../components/marketing/Hero";
 import { Panel } from "../components/ui/card";
@@ -5,7 +6,7 @@ import { Panel } from "../components/ui/card";
 const FAQ_ITEMS = [
   {
     q: "What is BYOK?",
-    a: "Bring Your Own Key. You add your Anthropic, OpenAI, and Google API keys in the desktop app. Keys are stored in Windows Credential Manager — not on our servers except when proxied for AI calls.",
+    a: "Bring Your Own Key. You add Anthropic, OpenAI, and/or Google API keys in Settings. Keys stay in Windows Credential Manager. Google is required for listing images. See our BYOK setup guide for cost-effective presets.",
   },
   {
     q: "Do you store my listing data?",
@@ -47,13 +48,29 @@ export function FaqPage() {
       />
       <Hero title="Frequently asked questions" subtitle="Quick answers about the desktop app, billing, and workflow." />
 
-      <section className="container-page space-y-4 pb-20">
+      <section className="container-page space-y-4 pb-12">
         {FAQ_ITEMS.map((item) => (
           <Panel key={item.q}>
             <h2 className="text-section font-medium">{item.q}</h2>
             <p className="mt-2 text-body text-text-muted">{item.a}</p>
           </Panel>
         ))}
+      </section>
+
+      <section className="container-page pb-20">
+        <Panel>
+          <h2 className="text-section font-medium">Need help choosing API keys?</h2>
+          <p className="mt-2 text-body text-text-muted">
+            We recommend the Simplest preset (Google only) to start, or Budget (OpenAI + Google) for
+            lower text cost.
+          </p>
+          <Link
+            to="/byok-setup"
+            className="mt-4 inline-flex text-body font-medium text-primary-hover hover:underline"
+          >
+            Open BYOK setup guide →
+          </Link>
+        </Panel>
       </section>
     </>
   );

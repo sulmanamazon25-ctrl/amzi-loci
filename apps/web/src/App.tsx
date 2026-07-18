@@ -11,6 +11,7 @@ import { AboutPage } from "./pages/AboutPage";
 import { ContactPage } from "./pages/ContactPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { TermsPage } from "./pages/TermsPage";
+import { ByokSetupPage } from "./pages/ByokSetupPage";
 import { ChangelogPage } from "./pages/ChangelogPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
@@ -27,6 +28,7 @@ export default function App() {
             <Route path="/download" element={<DownloadPage />} />
             <Route path="/for-agencies" element={<AgenciesPage />} />
             <Route path="/faq" element={<FaqPage />} />
+            <Route path="/byok-setup" element={<ByokSetupPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />

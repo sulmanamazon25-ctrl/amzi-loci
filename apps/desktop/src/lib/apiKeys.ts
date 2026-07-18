@@ -16,17 +16,17 @@ export const PROVIDERS: Array<{
   {
     id: "anthropic",
     label: "Anthropic",
-    hint: "Used for Claude review insights (Phase 2+)",
+    hint: "Insights and listing copy (Claude). Optional if you use OpenAI or Google for text.",
   },
   {
     id: "openai",
     label: "OpenAI",
-    hint: "Used for GPT-based workflows (Phase 2+)",
+    hint: "Insights and listing copy (GPT). Lowest typical cost for text workflows.",
   },
   {
     id: "google",
     label: "Google AI",
-    hint: "Used for Gemini / Imagen image generation (Phase 4+)",
+    hint: "Insights, listing copy, and listing images (required for image generation).",
   },
 ];
 

@@ -35,6 +35,7 @@ export const FOOTER_LINKS = {
   ],
   company: [
     { to: "/about", label: "About" },
+    { to: "/byok-setup", label: "BYOK setup" },
     { to: "/contact", label: "Contact" },
     { to: "/faq", label: "FAQ" },
   ],

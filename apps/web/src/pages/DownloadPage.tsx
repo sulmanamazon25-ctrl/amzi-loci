@@ -2,6 +2,7 @@ import { Download, HardDrive, Monitor, Shield } from "lucide-react";
 import { APP_VERSION, DOWNLOAD_BASE_URL } from "../lib/site";
 import { PageMeta } from "../components/layout/PageMeta";
 import { Hero } from "../components/marketing/Hero";
+import { ProductVideo } from "../components/marketing/ProductVideo";
 import { ButtonLink } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 
@@ -48,6 +49,17 @@ export function DownloadPage() {
         </div>
       </section>
 
+      <section className="container-page pb-12">
+        <ProductVideo title="Watch the 2-minute overview" compact />
+        <p className="mt-4 text-body text-text-muted">
+          New to BYOK?{" "}
+          <a href="/byok-setup" className="text-primary-hover hover:underline">
+            Follow the API key setup guide
+          </a>
+          .
+        </p>
+      </section>
+
       <section className="container-page pb-20">
         <h2 className="text-heading font-semibold">System requirements</h2>
         <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -69,7 +81,8 @@ export function DownloadPage() {
             </p>
           </Card>
         </div>
-        <div className="mt-8">
+        <div className="mt-8 flex flex-wrap gap-3">
+          <ButtonLink to="/byok-setup">BYOK setup guide</ButtonLink>
           <ButtonLink to="/faq" variant="secondary">
             Setup FAQ
           </ButtonLink>

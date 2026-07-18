@@ -143,6 +143,7 @@ export const IMAGE_TIERS: Array<{
 export type UsageEventType =
   | "insights"
   | "images"
+  | "listingCopy"
   | "aplus"
   | "localize"
   | "ads"
@@ -159,6 +160,7 @@ export type UsageLogEntry = {
   model: string;
   estimatedCostUsd: number;
   note?: string;
+  projectId?: string;
 };
 
 export type UsageSummary = {
@@ -167,6 +169,7 @@ export type UsageSummary = {
   totalReviewsProcessed: number;
   totalImagesGenerated: number;
   entries: UsageLogEntry[];
+  projectId?: string;
 };
 
 export type ExportFormat = "png" | "jpg";
@@ -260,4 +263,15 @@ export function estimateTextCostUsd(): number {
   return 0.03;
 }
 
+export type GenerateListingCopyRequest = {
+  brandKit: BrandKit;
+  insights: ProductInsight[];
+  productContext: string;
+  provider: ApiProvider;
+};
+
 export * from "./license.js";
+export * from "./listing-copy.js";
+export * from "./projects.js";
+export * from "./creative-brief.js";
+export * from "./byok-presets.js";
