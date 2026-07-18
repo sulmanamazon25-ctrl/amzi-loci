@@ -1,27 +1,176 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import type { HealthResponse, LicenseValidation } from "@amzi-loci/shared";
 import { SERVER_A_DEFAULT_URL } from "@amzi-loci/shared";
+import { AppShell } from "./components/layout/app-shell";
+import { Dashboard } from "./components/dashboard/dashboard";
+import { ProjectsPage } from "./pages/ProjectsPage";
+import { ClientsPage } from "./pages/ClientsPage";
+import { TemplatesPage } from "./pages/TemplatesPage";
+import { ExportsPage } from "./pages/ExportsPage";
+import { UsagePage } from "./pages/UsagePage";
+import { ProjectWorkspace } from "./components/workflow/project-workspace";
 import { Settings } from "./components/Settings";
-import { Workflow } from "./components/Workflow";
 import { BrandKits } from "./components/BrandKits";
 import { Studio } from "./components/Studio";
+import { ProductVideoStudio } from "./components/ProductVideoStudio";
 import { LicenseGate } from "./components/LicenseGate";
-import { getUsageSummary } from "./lib/export";
 import { validateLicense } from "./lib/license";
-import type { UsageSummary } from "@amzi-loci/shared";
-import "./App.css";
-
-type ConnectionState = "checking" | "connected" | "disconnected";
-type Tab = "home" | "workflow" | "brandkits" | "studio" | "settings";
+import { getKeyStatuses } from "./lib/apiKeys";
+import { listProjects } from "./lib/projects";
+import { getUsageSummary } from "./lib/usage";
+import { LoadingState } from "./components/ui/empty-loading";
 
 const serverUrl = import.meta.env.VITE_SERVER_A_URL ?? SERVER_A_DEFAULT_URL;
 
-function App() {
-  const [tab, setTab] = useState<Tab>("home");
-  const [connection, setConnection] = useState<ConnectionState>("checking");
+function ShellRoutes({
+  license,
+  onLicenseChange,
+}: {
+  license: LicenseValidation;
+  onLicenseChange: (l: LicenseValidation) => void;
+}) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [health, setHealth] = useState<HealthResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [usage, setUsage] = useState<UsageSummary | null>(null);
+  const [connections, setConnections] = useState<{ name: string; connected: boolean }[]>([]);
+  const [apiCostToday, setApiCostToday] = useState(0);
+  const [projectCount, setProjectCount] = useState(0);
+  const [syncState] = useState("Saved");
+
+  const refreshShell = useCallback(async () => {
+    try {
+      const [statuses, projects, usage] = await Promise.all([
+        getKeyStatuses(),
+        listProjects(),
+        getUsageSummary(null).catch(() => null),
+      ]);
+      setConnections(
+        statuses.map((s) => ({
+          name: s.provider.charAt(0).toUpperCase() + s.provider.slice(1),
+          connected: s.saved,
+        })),
+      );
+      setProjectCount(projects.length);
+
+      if (usage) {
+        const today = new Date().toDateString();
+        const todayCost = usage.entries
+          .filter((e) => new Date(e.timestamp).toDateString() === today)
+          .reduce((sum, e) => sum + e.estimatedCostUsd, 0);
+        setApiCostToday(todayCost);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    void refreshShell();
+    const id = window.setInterval(() => void refreshShell(), 30000);
+    return () => window.clearInterval(id);
+  }, [refreshShell]);
+
+  useEffect(() => {
+    void fetch(`${serverUrl}/health`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => setHealth(data as HealthResponse | null))
+      .catch(() => setHealth(null));
+  }, []);
+
+  const activePath = location.pathname === "/" ? "/" : `/${location.pathname.split("/")[1]}`;
+
+  const breadcrumb = useMemo(() => {
+    const parts = location.pathname.split("/").filter(Boolean);
+    if (parts.length === 0) return "Dashboard";
+    if (parts[0] === "projects" && parts.length >= 2) {
+      const step = parts[2] ? ` / ${parts[2]}` : "";
+      return `Projects / Workspace${step}`;
+    }
+    return parts.map((p) => p.charAt(0).toUpperCase() + p.slice(1).replace(/-/g, " ")).join(" / ");
+  }, [location.pathname]);
+
+  const canUseStudio = license.features.studio;
+
+  return (
+    <AppShell
+      activePath={activePath}
+      onNavigate={(path) => navigate(path)}
+      breadcrumb={breadcrumb}
+      onOpenCommandPalette={() => undefined}
+      apiCostToday={apiCostToday}
+      connections={connections}
+      projectCount={projectCount}
+      syncState={syncState}
+      canUseStudio={canUseStudio}
+    >
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Dashboard
+              userFirstName="there"
+              serverConnected={health?.status === "ok"}
+            />
+          }
+        />
+        <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/projects/:id" element={<ProjectWorkspace />} />
+        <Route path="/projects/:id/:step" element={<ProjectWorkspace />} />
+        <Route path="/clients" element={<ClientsPage />} />
+        <Route path="/templates" element={<TemplatesPage />} />
+        <Route path="/exports" element={<ExportsPage />} />
+        <Route path="/usage" element={<UsagePage />} />
+        <Route
+          path="/brand-kits"
+          element={
+            <div className="page-legacy mx-auto max-w-4xl">
+              <BrandKits />
+            </div>
+          }
+        />
+        <Route
+          path="/studio"
+          element={
+            canUseStudio ? (
+              <div className="page-legacy mx-auto max-w-4xl">
+                <Studio />
+              </div>
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+        <Route
+          path="/product-video"
+          element={
+            <div className="page-legacy mx-auto max-w-4xl">
+              <ProductVideoStudio canUseComplete={canUseStudio} />
+            </div>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <div className="page-legacy mx-auto max-w-3xl">
+              <Settings serverUrl={serverUrl} onLicenseChange={onLicenseChange} />
+            </div>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AppShell>
+  );
+}
+
+function App() {
   const [license, setLicense] = useState<LicenseValidation | null>(null);
   const [licenseLoading, setLicenseLoading] = useState(true);
   const [licenseError, setLicenseError] = useState<string | null>(null);
@@ -40,198 +189,40 @@ function App() {
     }
   }, []);
 
-  const checkHealth = useCallback(async () => {
-    setConnection("checking");
-    setError(null);
-
-    try {
-      const response = await fetch(`${serverUrl}/health`);
-      if (!response.ok) {
-        throw new Error(`Server returned ${response.status}`);
-      }
-
-      const data = (await response.json()) as HealthResponse;
-      setHealth(data);
-      setConnection(data.status === "ok" ? "connected" : "disconnected");
-    } catch (err) {
-      setHealth(null);
-      setConnection("disconnected");
-      setError(err instanceof Error ? err.message : "Connection failed");
-    }
-  }, []);
-
   useEffect(() => {
-    void checkHealth();
     void refreshLicense();
-    void getUsageSummary()
-      .then(setUsage)
-      .catch(() => setUsage(null));
-  }, [checkHealth, refreshLicense]);
-
-  const statusLabel =
-    connection === "checking"
-      ? "Checking..."
-      : connection === "connected"
-        ? "Connected"
-        : "Disconnected";
-
-  const canUseStudio = license?.features.studio ?? false;
+  }, [refreshLicense]);
 
   if (licenseLoading) {
     return (
-      <main className="app">
-        <header className="header">
-          <h1>Amzi Loci</h1>
-          <p className="subtitle">Amazon listing asset generator</p>
-        </header>
-        <p className="hint">Checking license…</p>
-      </main>
+      <div className="flex h-screen items-center justify-center bg-bg">
+        <LoadingState label="Checking license…" />
+      </div>
     );
   }
 
   if (license && !license.valid) {
     return (
-      <LicenseGate
-        serverUrl={serverUrl}
-        license={license}
-        error={licenseError}
-        onLicenseChange={(next) => {
-          setLicense(next);
-          if (next.valid) setLicenseError(null);
-        }}
-      />
+      <div className="page-legacy flex min-h-screen items-center justify-center bg-bg p-8">
+        <LicenseGate
+          serverUrl={serverUrl}
+          license={license}
+          error={licenseError}
+          onLicenseChange={(next) => {
+            setLicense(next);
+            if (next.valid) setLicenseError(null);
+          }}
+        />
+      </div>
     );
   }
 
   return (
-    <main className="app">
-      <header className="header">
-        <h1>Amzi Loci</h1>
-        <p className="subtitle">Amazon listing asset generator</p>
-      </header>
-
-      {license?.status === "trialing" && (
-        <div className="trial-banner">{license.message}</div>
+    <BrowserRouter>
+      {license && (
+        <ShellRoutes license={license} onLicenseChange={setLicense} />
       )}
-
-      {licenseError && (
-        <div className="trial-banner warning">
-          License check failed — {licenseError}. Workflow may be limited until the server is reachable.
-        </div>
-      )}
-
-      <nav className="tabs">
-        <button
-          type="button"
-          className={tab === "home" ? "tab active" : "tab"}
-          onClick={() => setTab("home")}
-        >
-          Status
-        </button>
-        <button
-          type="button"
-          className={tab === "workflow" ? "tab active" : "tab"}
-          onClick={() => setTab("workflow")}
-        >
-          Workflow
-        </button>
-        <button
-          type="button"
-          className={tab === "brandkits" ? "tab active" : "tab"}
-          onClick={() => setTab("brandkits")}
-        >
-          Brand kits
-        </button>
-        {canUseStudio && (
-          <button
-            type="button"
-            className={tab === "studio" ? "tab active" : "tab"}
-            onClick={() => setTab("studio")}
-          >
-            Studio
-          </button>
-        )}
-        <button
-          type="button"
-          className={tab === "settings" ? "tab active" : "tab"}
-          onClick={() => setTab("settings")}
-        >
-          Settings
-        </button>
-      </nav>
-
-      {tab === "home" ? (
-        <section className="status-card">
-          <div className="status-row">
-            <span className="status-label">Server A</span>
-            <span className={`status-badge status-${connection}`}>{statusLabel}</span>
-          </div>
-
-          <p className="server-url">{serverUrl}</p>
-
-          {license && (
-            <dl className="health-details">
-              <div>
-                <dt>License</dt>
-                <dd>
-                  {license.plan} ({license.status})
-                </dd>
-              </div>
-              {license.trialEndsAt && (
-                <div>
-                  <dt>Trial ends</dt>
-                  <dd>{new Date(license.trialEndsAt).toLocaleDateString()}</dd>
-                </div>
-              )}
-            </dl>
-          )}
-
-          {health && (
-            <dl className="health-details">
-              <div>
-                <dt>Service</dt>
-                <dd>{health.service}</dd>
-              </div>
-              <div>
-                <dt>Database</dt>
-                <dd>{health.db}</dd>
-              </div>
-              <div>
-                <dt>Last check</dt>
-                <dd>{new Date(health.timestamp).toLocaleString()}</dd>
-              </div>
-            </dl>
-          )}
-
-          {error && <p className="error">{error}</p>}
-
-          <button type="button" className="retry-btn" onClick={() => void checkHealth()}>
-            Retry connection
-          </button>
-
-          {usage && usage.entries.length > 0 && (
-            <dl className="health-details usage-home">
-              <div>
-                <dt>Est. API spend (local log)</dt>
-                <dd>${usage.totalEstimatedCostUsd.toFixed(2)}</dd>
-              </div>
-              <div>
-                <dt>Images generated</dt>
-                <dd>{usage.totalImagesGenerated}</dd>
-              </div>
-            </dl>
-          )}
-        </section>
-      ) : tab === "workflow" ? (
-        <Workflow />
-      ) : tab === "brandkits" ? (
-        <BrandKits />
-      ) : tab === "studio" && canUseStudio ? (
-        <Studio />
-      ) : (
-        <Settings serverUrl={serverUrl} onLicenseChange={setLicense} />
-      )}
-    </main>
+    </BrowserRouter>
   );
 }
 

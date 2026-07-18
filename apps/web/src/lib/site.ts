@@ -8,7 +8,7 @@ export const CONTACT_EMAIL =
 export const DOWNLOAD_BASE_URL =
   import.meta.env.VITE_DOWNLOAD_BASE_URL ?? "/downloads";
 
-export const APP_VERSION = "0.11.0";
+export { APP_VERSION } from "@amzi-loci/shared";
 
 export const WORKFLOW_STEPS = [
   { num: 1, title: "Reviews", desc: "Paste or import customer reviews" },
@@ -23,6 +23,7 @@ export const NAV_LINKS = [
   { to: "/features", label: "Features" },
   { to: "/pricing", label: "Pricing" },
   { to: "/for-agencies", label: "Agencies" },
+  { to: "/getting-started", label: "Getting started" },
   { to: "/download", label: "Download" },
 ] as const;
 
@@ -30,6 +31,7 @@ export const FOOTER_LINKS = {
   product: [
     { to: "/features", label: "Features" },
     { to: "/pricing", label: "Pricing" },
+    { to: "/getting-started", label: "Getting started" },
     { to: "/download", label: "Download" },
     { to: "/changelog", label: "Changelog" },
   ],

@@ -7,6 +7,7 @@ import { registerBrandKitRoutes } from "./routes/brandkit.js";
 import { registerImageRoutes } from "./routes/images.js";
 import { registerStudioRoutes } from "./routes/studio.js";
 import { registerLicenseRoutes } from "./routes/license.js";
+import { registerListingCopyRoutes } from "./routes/listing-copy.js";
 
 const port = Number(process.env.PORT) || 3000;
 const host = "0.0.0.0";
@@ -26,6 +27,7 @@ await registerBrandKitRoutes(app);
 await registerImageRoutes(app);
 await registerStudioRoutes(app);
 await registerLicenseRoutes(app);
+await registerListingCopyRoutes(app);
 
 app.get("/health", async (_request, reply) => {
   const dbConnected = await pingDatabase();
@@ -42,9 +44,9 @@ app.get("/health", async (_request, reply) => {
 
 app.get("/", async (_request, reply) => {
   const body: ApiInfoResponse = {
-    message: "Amzi Loci API — Phase 7",
+    message: "Amzi Loci API — Phase 8",
     service: "amzi-loci",
-    version: "0.8.0",
+    version: "0.9.0",
   };
 
   return reply.status(200).send(body);

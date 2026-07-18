@@ -12,7 +12,9 @@ export function SiteNav() {
     <header className="sticky top-0 z-50 border-b border-border bg-bg/90 backdrop-blur-md">
       <div className="container-page flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 font-medium text-text">
-          <span className="h-7 w-7 rounded-md bg-primary" />
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-caption font-semibold text-white">
+            A
+          </span>
           Amzi Loci
         </Link>
 

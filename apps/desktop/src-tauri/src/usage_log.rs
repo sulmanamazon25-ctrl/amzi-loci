@@ -1,3 +1,4 @@
+use crate::projects;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
@@ -16,6 +17,8 @@ pub struct UsageLogEntry {
     pub model: String,
     pub estimated_cost_usd: f64,
     pub note: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub project_id: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -26,6 +29,7 @@ pub struct UsageSummary {
     pub total_reviews_processed: u32,
     pub total_images_generated: u32,
     pub entries: Vec<UsageLogEntry>,
+    pub project_id: Option<String>,
 }
 
 const LOG_FILE: &str = "usage-log.json";
@@ -48,6 +52,10 @@ fn now_iso() -> String {
 
 fn new_id(prefix: &str) -> String {
     format!("{prefix}-{}", now_iso())
+}
+
+fn active_project_id(app: &tauri::AppHandle) -> Option<String> {
+    projects::get_active_project_id(app).ok().flatten()
 }
 
 fn read_entries(app: &tauri::AppHandle) -> Result<Vec<UsageLogEntry>, String> {
@@ -89,6 +97,28 @@ pub fn record_insights(
         model: model.to_string(),
         estimated_cost_usd: cost,
         note: None,
+        project_id: active_project_id(app),
+    };
+    append_entry(app, entry)
+}
+
+pub fn record_listing_copy(
+    app: &tauri::AppHandle,
+    provider: &str,
+    model: &str,
+) -> Result<(), String> {
+    let entry = UsageLogEntry {
+        id: new_id("copy"),
+        timestamp: now_iso(),
+        event_type: "listingCopy".to_string(),
+        provider: Some(provider.to_string()),
+        review_count: None,
+        image_count: None,
+        image_tier: None,
+        model: model.to_string(),
+        estimated_cost_usd: 0.03,
+        note: None,
+        project_id: active_project_id(app),
     };
     append_entry(app, entry)
 }
@@ -112,6 +142,7 @@ pub fn record_images(
         model: model.to_string(),
         estimated_cost_usd: cost,
         note: regenerated.then_some("regenerate".to_string()),
+        project_id: active_project_id(app),
     };
     append_entry(app, entry)
 }
@@ -126,25 +157,40 @@ fn append_entry(app: &tauri::AppHandle, entry: UsageLogEntry) -> Result<(), Stri
     write_entries(app, &entries)
 }
 
-pub fn get_usage_summary(app: &tauri::AppHandle) -> Result<UsageSummary, String> {
+pub fn get_usage_summary(
+    app: &tauri::AppHandle,
+    project_id: Option<String>,
+) -> Result<UsageSummary, String> {
     let entries = read_entries(app)?;
+    let filtered: Vec<UsageLogEntry> = if let Some(ref pid) = project_id {
+        entries
+            .into_iter()
+            .filter(|e| e.project_id.as_deref() == Some(pid.as_str()))
+            .collect()
+    } else {
+        entries
+    };
+
     let mut total_cost = 0.0;
     let mut insight_calls = 0u32;
     let mut reviews = 0u32;
     let mut images = 0u32;
 
-    for entry in &entries {
+    for entry in &filtered {
         total_cost += entry.estimated_cost_usd;
         if entry.event_type == "insights" {
             insight_calls += 1;
             reviews += entry.review_count.unwrap_or(0);
         }
-        if entry.event_type == "images" || entry.event_type == "ads" || entry.event_type == "variations" {
+        if entry.event_type == "images"
+            || entry.event_type == "ads"
+            || entry.event_type == "variations"
+        {
             images += entry.image_count.unwrap_or(0);
         }
     }
 
-    let mut sorted = entries;
+    let mut sorted = filtered;
     sorted.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
 
     Ok(UsageSummary {
@@ -153,6 +199,7 @@ pub fn get_usage_summary(app: &tauri::AppHandle) -> Result<UsageSummary, String>
         total_reviews_processed: reviews,
         total_images_generated: images,
         entries: sorted,
+        project_id,
     })
 }
 
@@ -195,6 +242,7 @@ pub fn record_studio(
         model: model.to_string(),
         estimated_cost_usd,
         note: None,
+        project_id: active_project_id(app),
     };
     append_entry(app, entry)
 }

@@ -1,18 +1,32 @@
 import { Link } from "react-router-dom";
+import { APP_VERSION, formatReleaseRelativeDate, getLatestRelease } from "@amzi-loci/shared";
 import { API_STATUS_URL, FOOTER_LINKS } from "../../lib/site";
 
 export function SiteFooter() {
+  const latest = getLatestRelease();
+
   return (
     <footer className="mt-24 border-t border-border bg-surface">
       <div className="container-page grid gap-10 py-12 md:grid-cols-4">
         <div className="md:col-span-1">
           <div className="flex items-center gap-2 font-medium">
-            <span className="h-6 w-6 rounded-md bg-primary" />
+            <span className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-caption font-semibold text-white">
+              A
+            </span>
             Amzi Loci
           </div>
           <p className="mt-3 text-body text-text-muted">
             BYOK, local-first Amazon listing desk for agencies and sellers.
           </p>
+          <Link
+            to="/changelog"
+            className="mt-3 inline-flex items-center gap-2 text-caption text-text-muted hover:text-text"
+          >
+            <span className="rounded-full bg-primary/15 px-2 py-0.5 font-medium text-primary-hover">
+              v{APP_VERSION}
+            </span>
+            <span>{formatReleaseRelativeDate(latest.releasedAt)}</span>
+          </Link>
         </div>
 
         <div>

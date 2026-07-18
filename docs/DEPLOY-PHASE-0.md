@@ -1,12 +1,12 @@
-# Amzi Loci — Phase 0 Deployment Guide
+# Amzi Loci â€” Phase 0 Deployment Guide
 
-Deploy in this order: **Server B → migrations → Server A → desktop config**.
+Deploy in this order: **Server B â†’ migrations â†’ Server A â†’ desktop config**.
 
-## 1. Server B — Postgres + Redis (194.9.62.143)
+## 1. Server B â€” Postgres + Redis (194.9.62.143)
 
 1. Push this repo to GitHub
 2. Open Coolify on EURONODE: `http://194.9.62.143:8000`
-3. **+ New Resource** → **Docker Compose**
+3. **+ New Resource** â†’ **Docker Compose**
 4. Connect GitHub repo, set **Base Directory** to `infra/server-b`
 5. Set environment variables in Coolify UI:
    - `POSTGRES_USER=amzi_loci`
@@ -25,13 +25,13 @@ $env:DATABASE_URL="postgresql://amzi_loci:<password>@194.9.62.143:5432/amzi_loci
 pnpm db:migrate:deploy
 ```
 
-## 3. Server A — Fastify API (46.62.226.89)
+## 3. Server A â€” Fastify API (46.62.226.89)
 
 1. Open Coolify: `http://46.62.226.89:8000`
-2. **+ New Resource** → **Application** → Dockerfile
+2. **+ New Resource** â†’ **Application** â†’ Dockerfile
 3. Connect same GitHub repo
 4. Settings:
-   - **Base Directory**: `/` (repo root — Dockerfile needs monorepo context)
+   - **Base Directory**: `/` (repo root â€” Dockerfile needs monorepo context)
    - **Dockerfile**: `apps/server-a/Dockerfile`
    - **Port**: 3000
    - **Health Check**: `/health`
@@ -48,7 +48,7 @@ curl https://your-api-domain/health
 # Expect: { "status": "ok", "db": "connected", ... }
 ```
 
-## 4. Desktop — point at deployed API
+## 4. Desktop â€” point at deployed API
 
 Create `apps/desktop/.env`:
 ```
@@ -60,11 +60,21 @@ Build:
 pnpm --filter @amzi-loci/desktop tauri build
 ```
 
+## Local pre-deploy check
+
+```powershell
+.\scripts\verify-phase0.ps1
+```
+
 ## Phase 0 checklist
 
-- [ ] `pnpm install` succeeds
+- [x] `pnpm install` succeeds
 - [ ] `pnpm db:migrate:deploy` against Server B
-- [ ] `GET /health` returns 200 with `db: "connected"`
+- [x] `GET /health` returns 200 with `db: "connected"` (verified 2026-07-13: production sslip.io)
 - [ ] Desktop shows Connected when Server A is up
 - [ ] Desktop shows Disconnected when Server A is stopped
-- [ ] No secrets in git
+- [x] No secrets in git
+
+## Phase 0 verification log
+
+- **2026-07-13**: pnpm install, db:generate, server-a/desktop builds OK; production /health 200 db: connected; GET / 200 (API v0.8.0). Local Docker Postgres unavailable (engine error); local db:migrate:deploy not run.

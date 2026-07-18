@@ -5,6 +5,14 @@ import { Panel } from "../components/ui/card";
 
 const FAQ_ITEMS = [
   {
+    q: "How do I install the desktop app?",
+    a: "Download Setup.exe from the Download page or follow our Getting Started guide for one-click install, SmartScreen tips, and your first project walkthrough.",
+  },
+  {
+    q: "What is Product Video?",
+    a: "A desktop sidebar tool that builds Basic (~30–45s) or Complete (~60–90s) storyboards from your project — review insights, copy, and image hints for Amazon-style product videos. Complete mode requires Pro+.",
+  },
+  {
     q: "What is BYOK?",
     a: "Bring Your Own Key. You add Anthropic, OpenAI, and/or Google API keys in Settings. Keys stay in Windows Credential Manager. Google is required for listing images. See our BYOK setup guide for cost-effective presets.",
   },
@@ -55,6 +63,21 @@ export function FaqPage() {
             <p className="mt-2 text-body text-text-muted">{item.a}</p>
           </Panel>
         ))}
+      </section>
+
+      <section className="container-page pb-20">
+        <Panel>
+          <h2 className="text-section font-medium">New to Amzi Loci?</h2>
+          <p className="mt-2 text-body text-text-muted">
+            Start with the getting started guide for install steps, then add API keys.
+          </p>
+          <Link
+            to="/getting-started"
+            className="mt-4 inline-flex text-body font-medium text-primary-hover hover:underline"
+          >
+            Open getting started guide →
+          </Link>
+        </Panel>
       </section>
 
       <section className="container-page pb-20">

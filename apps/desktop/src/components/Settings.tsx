@@ -9,7 +9,13 @@ import {
   type KeyStatus,
 } from "../lib/apiKeys";
 import type { LicenseValidation } from "@amzi-loci/shared";
+import {
+  APP_VERSION,
+  formatReleaseRelativeDate,
+  getLatestRelease,
+} from "@amzi-loci/shared";
 import { LicensePanel } from "./LicensePanel";
+import { UsagePanel } from "./UsagePanel";
 
 type ProviderState = {
   input: string;
@@ -22,6 +28,8 @@ type ProviderState = {
 type Props = {
   serverUrl: string;
   onLicenseChange?: (license: LicenseValidation) => void;
+  activeProjectId?: string | null;
+  activeProjectLabel?: string;
 };
 
 const emptyProviderState = (): ProviderState => ({
@@ -32,7 +40,12 @@ const emptyProviderState = (): ProviderState => ({
   error: null,
 });
 
-export function Settings({ serverUrl, onLicenseChange }: Props) {
+export function Settings({
+  serverUrl,
+  onLicenseChange,
+  activeProjectId,
+  activeProjectLabel,
+}: Props) {
   const [statuses, setStatuses] = useState<KeyStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [providerState, setProviderState] = useState<Record<ApiProvider, ProviderState>>({
@@ -124,8 +137,27 @@ export function Settings({ serverUrl, onLicenseChange }: Props) {
   const statusFor = (provider: ApiProvider) =>
     statuses.find((item) => item.provider === provider);
 
+  const latestRelease = getLatestRelease();
+
   return (
     <section className="settings">
+      <div className="provider-card">
+        <div className="provider-header">
+          <div>
+            <h2>What&apos;s new</h2>
+            <p className="muted">
+              v{APP_VERSION} · {formatReleaseRelativeDate(latestRelease.releasedAt)}
+            </p>
+          </div>
+        </div>
+        <p className="muted">{latestRelease.title}</p>
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-body">
+          {latestRelease.highlights.slice(0, 4).map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </div>
+
       <LicensePanel
         serverUrl={serverUrl}
         compact
@@ -213,6 +245,12 @@ export function Settings({ serverUrl, onLicenseChange }: Props) {
           })}
         </div>
       )}
+
+      <UsagePanel
+        compact
+        activeProjectId={activeProjectId}
+        activeProjectLabel={activeProjectLabel}
+      />
     </section>
   );
 }

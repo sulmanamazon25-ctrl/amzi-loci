@@ -1,0 +1,27 @@
+@import "./styles/tokens.css";
+@import "./legacy-components.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  #root {
+    min-height: 100vh;
+  }
+
+  .page-legacy .settings,
+  .page-legacy .brand-kits-page,
+  .workflow-embed .copy-panel,
+  .workflow-embed .export-panel,
+  .workflow-embed .image-gallery {
+    margin-top: 0;
+  }
+
+  .usage-panel {
+    margin-top: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+}

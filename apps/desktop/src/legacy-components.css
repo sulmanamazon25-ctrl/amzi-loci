@@ -1,162 +1,3 @@
-:root {
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #e8eaed;
-  background-color: #0f1117;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  min-height: 100vh;
-}
-
-.app {
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-}
-
-.header h1 {
-  font-size: 1.75rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-.subtitle {
-  margin-top: 0.25rem;
-  color: #9aa0a6;
-  font-size: 0.95rem;
-}
-
-.status-card {
-  margin-top: 2rem;
-  padding: 1.25rem;
-  border: 1px solid #2d3139;
-  border-radius: 12px;
-  background: #161b22;
-}
-
-.status-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.status-label {
-  font-weight: 500;
-}
-
-.status-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.status-checking {
-  background: #3d3d00;
-  color: #facc15;
-}
-
-.status-connected {
-  background: #14532d;
-  color: #4ade80;
-}
-
-.status-disconnected {
-  background: #450a0a;
-  color: #f87171;
-}
-
-.server-url {
-  margin-top: 0.75rem;
-  font-size: 0.85rem;
-  color: #9aa0a6;
-  word-break: break-all;
-}
-
-.health-details {
-  margin-top: 1rem;
-  display: grid;
-  gap: 0.5rem;
-}
-
-.health-details div {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: 0.9rem;
-}
-
-.health-details dt {
-  color: #9aa0a6;
-}
-
-.error {
-  margin-top: 0.75rem;
-  color: #f87171;
-  font-size: 0.9rem;
-}
-
-.retry-btn {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid #3d4450;
-  border-radius: 8px;
-  background: #21262d;
-  color: #e8eaed;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.retry-btn:hover {
-  background: #2d333b;
-}
-
-.placeholder {
-  margin-top: 2rem;
-  padding: 1rem;
-  border: 1px dashed #2d3139;
-  border-radius: 8px;
-  color: #9aa0a6;
-}
-
-.placeholder h2 {
-  font-size: 1rem;
-  color: #e8eaed;
-  margin-bottom: 0.25rem;
-}
-
-.tabs {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-}
-
-.tab {
-  flex: 1;
-  padding: 0.65rem 1rem;
-  border: 1px solid #2d3139;
-  border-radius: 8px;
-  background: #161b22;
-  color: #9aa0a6;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.tab.active {
-  color: #e8eaed;
-  border-color: #4f8cff;
-  background: #1a2332;
-}
-
 .settings {
   margin-top: 1.5rem;
 }
@@ -870,4 +711,401 @@ body {
 .hint {
   margin-top: 2rem;
   color: #9aa0a6;
+}
+
+.wizard-steps-wrap {
+  flex-wrap: wrap;
+}
+
+.wizard-step {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 4.5rem;
+}
+
+.wizard-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: #2d3139;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.wizard-step.active .wizard-step-num {
+  background: #4f8cff;
+  color: #fff;
+}
+
+.workflow-continue {
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+.copy-panel {
+  margin-top: 0.5rem;
+}
+
+.copy-lead {
+  color: #d1d5db;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.copy-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.copy-field-card {
+  padding: 0.85rem 1rem;
+  border: 1px solid #2d3139;
+  border-radius: 10px;
+  background: #0f1117;
+}
+
+.copy-field-card label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  color: #e8eaed;
+}
+
+.copy-textarea {
+  min-height: 3rem;
+}
+
+.char-hint {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #9aa0a6;
+}
+
+.char-hint.ok {
+  color: #4ade80;
+}
+
+.char-hint.warn {
+  color: #facc15;
+}
+
+.char-hint.over {
+  color: #f87171;
+}
+
+.copy-model {
+  margin-top: 0.25rem;
+}
+
+.compliance-card {
+  padding: 1rem 1.1rem;
+  border: 1px solid #2d3139;
+  border-radius: 12px;
+  background: #161b22;
+  margin-bottom: 1.25rem;
+}
+
+.compliance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.compliance-header h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.compliance-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.compliance-badge.pass {
+  background: #14532d;
+  color: #4ade80;
+}
+
+.compliance-badge.warn {
+  background: #3d3d00;
+  color: #facc15;
+}
+
+.compliance-badge.fail {
+  background: #450a0a;
+  color: #f87171;
+}
+
+.compliance-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.compliance-item {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  font-size: 0.88rem;
+}
+
+.compliance-item strong {
+  display: block;
+  font-weight: 500;
+}
+
+.compliance-item p {
+  margin: 0.15rem 0 0;
+  color: #9aa0a6;
+}
+
+.compliance-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  margin-top: 0.35rem;
+  flex-shrink: 0;
+}
+
+.compliance-item.status-pass .compliance-dot {
+  background: #4ade80;
+}
+
+.compliance-item.status-warn .compliance-dot {
+  background: #facc15;
+}
+
+.compliance-item.status-fail .compliance-dot {
+  background: #f87171;
+}
+
+.export-section-primary {
+  margin-bottom: 1rem;
+}
+
+.export-images-only {
+  margin-top: 0.5rem;
+}
+
+.export-hint {
+  align-self: center;
+  font-size: 0.85rem;
+}
+
+.usage-summary-compact {
+  margin-top: 0;
+}
+
+.usage-stats-inline {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.usage-stats-inline dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.app-wide {
+  max-width: 720px;
+}
+
+.header-project {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.project-bar {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #2d3139;
+  border-radius: 12px;
+  background: #161b22;
+}
+
+.project-bar-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #9aa0a6;
+  margin-bottom: 0.15rem;
+}
+
+.project-bar-product {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.projects-panel h2 {
+  font-size: 1.25rem;
+}
+
+.projects-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.project-form-card,
+.empty-state-card,
+.project-card {
+  padding: 1rem;
+  border: 1px solid #2d3139;
+  border-radius: 12px;
+  background: #161b22;
+}
+
+.project-form-card {
+  margin-bottom: 1rem;
+}
+
+.project-form-card h3,
+.empty-state-card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.project-card-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.project-card h3 {
+  font-size: 1.05rem;
+  margin: 0.35rem 0;
+}
+
+.project-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.project-client {
+  color: #93c5fd;
+  font-weight: 600;
+}
+
+.project-updated {
+  color: #9aa0a6;
+}
+
+.project-product {
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.empty-state-card {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.empty-state-card .secondary-btn {
+  margin-top: 0.75rem;
+}
+
+.usage-panel {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border: 1px solid #2d3139;
+  border-radius: 12px;
+  background: #161b22;
+}
+
+.usage-panel-compact {
+  margin-top: 1rem;
+}
+
+.usage-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.usage-panel h3,
+.usage-panel h4 {
+  font-size: 1rem;
+}
+
+.usage-filter {
+  max-width: 220px;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.usage-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1rem;
+}
+
+.usage-stats div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.usage-stats dt {
+  color: #9aa0a6;
+}
+
+.usage-stats dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.usage-entries {
+  margin-top: 1rem;
+}
+
+.usage-entry-list {
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.usage-entry-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid #2d3139;
+}
+
+.usage-entry-type {
+  text-transform: capitalize;
+  min-width: 5rem;
+}
+
+.usage-entry-cost {
+  font-weight: 600;
+}
+
+.usage-entry-project {
+  font-size: 0.8rem;
 }

@@ -275,3 +275,5 @@ export * from "./listing-copy.js";
 export * from "./projects.js";
 export * from "./creative-brief.js";
 export * from "./byok-presets.js";
+export * from "./product-video.js";
+export * from "./release-log.js";

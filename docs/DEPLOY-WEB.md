@@ -16,13 +16,41 @@ Deploy the static marketing site (`apps/web`) to Coolify on Server A as a separa
 
 Production API (unchanged): `https://iz1yfanbxaefgipk6e1k3o20.46-62-226-89.sslip.io`
 
+## Custom domain (Hostinger)
+
+Point **amziloci.com** at Coolify on Server A (`46.62.226.89`).
+
+### Hostinger DNS records
+
+In Hostinger: **Domains → amziloci.com → DNS / DNS Zone**.
+
+| Type | Name | Points to | TTL |
+|------|------|-----------|-----|
+| **A** | `@` | `46.62.226.89` | 3600 (or default) |
+| **A** | `www` | `46.62.226.89` | 3600 |
+
+Remove any conflicting Hostinger parking page or default `A`/`CNAME` records first.
+
+DNS can take 5–60 minutes to propagate. Coolify issues Let's Encrypt HTTPS once DNS resolves.
+
+### Coolify
+
+After DNS is set, register the domain on the app:
+
+```powershell
+cd "E:\amzi loci"
+.\scripts\deploy-coolify-web.ps1 -SkipDeploy
+```
+
+Default domains: `https://amziloci.com`, `https://www.amziloci.com`
+
+Fallback (still works): `https://amzi-loci.46-62-226-89.sslip.io`
+
 ## Public URL
 
-After deploy, Coolify assigns an auto `sslip.io` domain. The deploy script prints and saves it to `scripts/amzi-loci-web-coolify-id.local`.
+**Primary:** `https://amziloci.com`
 
-**Assigned domain:** `https://amzi-loci.46-62-226-89.sslip.io`
-
-**Note:** Coolify builds from GitHub `main`. Push `apps/web` and re-run deploy if the site returns 404.
+**Assigned domain (Coolify):** `https://amziloci.com`, `https://www.amziloci.com`
 
 ## Prerequisites
 

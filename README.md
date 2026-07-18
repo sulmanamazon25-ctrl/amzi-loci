@@ -89,6 +89,14 @@ pnpm --filter @amzi-loci/desktop tauri build
 
 ## Phase 0 verification
 
+Run the local gate script (install, build, optional Docker DB, health check):
+
+```powershell
+.\scripts\verify-phase0.ps1
+```
+
+Manual checklist:
+
 - [ ] `pnpm install` succeeds
 - [ ] `pnpm db:migrate` runs clean
 - [ ] `GET /health` returns 200 with `db: "connected"`

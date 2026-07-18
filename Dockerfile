@@ -15,6 +15,7 @@ COPY docker/images.mjs ./images.mjs
 COPY docker/text-llm.mjs ./text-llm.mjs
 COPY docker/studio.mjs ./studio.mjs
 COPY docker/license.mjs ./license.mjs
+COPY docker/listing-copy.mjs ./listing-copy.mjs
 
 ENV NODE_ENV=production
 ENV PORT=3000

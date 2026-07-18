@@ -4,6 +4,8 @@ mod images;
 mod insights;
 mod keys;
 mod license;
+mod listing_copy;
+mod projects;
 mod session;
 mod studio;
 mod usage_log;
@@ -17,6 +19,10 @@ use session::ListingSession;
 use studio::{AplusContentResult, AplusModuleInput, StudioImagesResult};
 use usage_log::UsageSummary;
 use license::{CheckoutResponse, LicenseValidation};
+use listing_copy::ListingCopyResult;
+use projects::{
+    CreateProjectInput, ProjectData, ProjectSummary, SaveProjectInput,
+};
 use tauri::AppHandle;
 
 #[tauri::command]
@@ -125,8 +131,8 @@ async fn generate_images(
 }
 
 #[tauri::command]
-fn get_usage_summary(app: AppHandle) -> Result<UsageSummary, String> {
-    usage_log::get_usage_summary(&app)
+fn get_usage_summary(app: AppHandle, project_id: Option<String>) -> Result<UsageSummary, String> {
+    usage_log::get_usage_summary(&app, project_id)
 }
 
 #[tauri::command]
@@ -228,6 +234,31 @@ async fn generate_variation_images(
 }
 
 #[tauri::command]
+async fn generate_listing_copy(
+    app: AppHandle,
+    server_url: String,
+    brand_kit_id: String,
+    insights: Vec<InsightRow>,
+    product_context: String,
+    provider: String,
+) -> Result<ListingCopyResult, String> {
+    listing_copy::generate_listing_copy(
+        &app,
+        &server_url,
+        &brand_kit_id,
+        insights,
+        &product_context,
+        &provider,
+    )
+    .await
+}
+
+#[tauri::command]
+fn export_listing_pack_command(input: export::ExportPackInput) -> Result<String, String> {
+    export::export_listing_pack(input)
+}
+
+#[tauri::command]
 fn get_device_fingerprint(app: AppHandle) -> Result<String, String> {
     license::compute_fingerprint(&app)
 }
@@ -256,6 +287,49 @@ async fn sync_license_checkout(
     license::sync_checkout(&app, &server_url, &session_id).await
 }
 
+#[tauri::command]
+fn list_projects(app: AppHandle) -> Result<Vec<ProjectSummary>, String> {
+    projects::list_projects(&app)
+}
+
+#[tauri::command]
+fn create_project(app: AppHandle, input: CreateProjectInput) -> Result<ProjectData, String> {
+    projects::create_project(&app, input)
+}
+
+#[tauri::command]
+fn load_project(app: AppHandle, id: String) -> Result<ProjectData, String> {
+    projects::load_project(&app, id)
+}
+
+#[tauri::command]
+fn save_project(app: AppHandle, input: SaveProjectInput) -> Result<ProjectData, String> {
+    projects::save_project_data(&app, input)
+}
+
+#[tauri::command]
+fn delete_project(app: AppHandle, id: String) -> Result<(), String> {
+    projects::delete_project(&app, id)
+}
+
+#[tauri::command]
+fn get_active_project(app: AppHandle) -> Result<Option<ProjectData>, String> {
+    match projects::ensure_default_project(&app) {
+        Ok(project) => Ok(Some(project)),
+        Err(e) => Err(e),
+    }
+}
+
+#[tauri::command]
+fn read_image_preview(path: String) -> Result<String, String> {
+    projects::read_image_data_url(&path)
+}
+
+#[tauri::command]
+fn export_creative_brief_command(content: String, product_name: String) -> Result<String, String> {
+    projects::export_creative_brief_file(content, product_name)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -276,16 +350,26 @@ pub fn run() {
             generate_images,
             get_usage_summary,
             export_images_zip_command,
+            export_listing_pack_command,
             save_listing_session,
             get_listing_session,
             generate_aplus_content,
             localize_aplus_content,
             generate_ad_creatives,
             generate_variation_images,
+            generate_listing_copy,
             get_device_fingerprint,
             validate_license,
             create_license_checkout,
-            sync_license_checkout
+            sync_license_checkout,
+            list_projects,
+            create_project,
+            load_project,
+            save_project,
+            delete_project,
+            get_active_project,
+            read_image_preview,
+            export_creative_brief_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

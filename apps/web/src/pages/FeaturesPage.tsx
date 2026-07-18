@@ -1,5 +1,6 @@
 import {
   ClipboardList,
+  Film,
   FolderKanban,
   Globe,
   Image,
@@ -14,6 +15,9 @@ import { PageMeta } from "../components/layout/PageMeta";
 import { Hero } from "../components/marketing/Hero";
 import { FeatureGrid } from "../components/marketing/FeatureGrid";
 import { WorkflowSteps } from "../components/marketing/WorkflowSteps";
+import { ProductVideo } from "../components/marketing/ProductVideo";
+import { ButtonLink } from "../components/ui/button";
+import { Panel } from "../components/ui/card";
 
 export function FeaturesPage() {
   return (
@@ -32,9 +36,19 @@ export function FeaturesPage() {
         <WorkflowSteps />
       </section>
 
+      <section className="container-page pb-16">
+        <ProductVideo title="Product overview" />
+      </section>
+
       <section className="container-page space-y-16 pb-20">
         <FeatureGrid
           items={[
+            {
+              icon: Film,
+              title: "Product video storyboards",
+              description:
+                "Basic and Complete modes in the desktop app — turn review insights into Amazon-style video scripts and scene boards.",
+            },
             {
               icon: MessageSquareText,
               title: "Review-driven insights",
@@ -95,6 +109,16 @@ export function FeaturesPage() {
             },
           ]}
         />
+
+        <Panel className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-heading font-semibold">Ready to install?</h2>
+            <p className="mt-2 max-w-xl text-body text-text-muted">
+              One-click Windows Setup.exe, SmartScreen help, and a first-project walkthrough.
+            </p>
+          </div>
+          <ButtonLink to="/getting-started">Open getting started guide</ButtonLink>
+        </Panel>
       </section>
     </>
   );

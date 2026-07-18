@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Building2,
   FileText,
@@ -8,6 +9,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import { APP_VERSION } from "../lib/site";
 import { PageMeta } from "../components/layout/PageMeta";
 import { Hero } from "../components/marketing/Hero";
 import { FeatureGrid } from "../components/marketing/FeatureGrid";
@@ -25,11 +27,11 @@ export function HomePage() {
         path="/"
       />
       <Hero
-        badge="v0.11 — Desktop MVP"
+        badge={`v${APP_VERSION} — Desktop MVP`}
         title="One desk for review-driven Amazon listings"
         subtitle="Amzi Loci is a BYOK, local-first Windows app that turns customer reviews into Seller Central–ready copy, images, and upload packs — built for agencies and serious sellers."
         primaryCta={{ to: "/download", label: "Download for Windows" }}
-        secondaryCta={{ to: "/features", label: "See how it works" }}
+        secondaryCta={{ to: "/getting-started", label: "Getting started" }}
       />
 
       <section className="container-page pb-16">
@@ -98,13 +100,18 @@ export function HomePage() {
             <h2 className="text-heading font-semibold">Ready to ship your next listing?</h2>
             <p className="mt-2 max-w-xl text-body text-text-muted">
               Download the desktop app, add your API keys, and run your first project in under 30 minutes.{" "}
-              <a href="/byok-setup" className="text-primary-hover hover:underline">
+              <Link to="/getting-started" className="text-primary-hover hover:underline">
+                Getting started guide
+              </Link>
+              {" · "}
+              <Link to="/byok-setup" className="text-primary-hover hover:underline">
                 BYOK setup guide
-              </a>
+              </Link>
             </p>
           </div>
-          <div className="flex gap-3">
-            <ButtonLink to="/pricing">View pricing</ButtonLink>
+          <div className="flex flex-wrap gap-3">
+            <ButtonLink to="/getting-started">Getting started</ButtonLink>
+            <ButtonLink to="/pricing" variant="secondary">View pricing</ButtonLink>
             <ButtonLink to="/download" variant="secondary">
               Download
             </ButtonLink>

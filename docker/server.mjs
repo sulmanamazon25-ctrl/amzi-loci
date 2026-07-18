@@ -4,6 +4,7 @@ import { extractInsights } from "./insights.mjs";
 import { applyBrandKit, validateBrandKit } from "./brandkit.mjs";
 import { generateImages, VALID_TIERS } from "./images.mjs";
 import { generateAplus, generateAds, generateVariations, localizeContent } from "./studio.mjs";
+import { generateListingCopy } from "./listing-copy.mjs";
 import {
   validateLicense,
   createStripeCheckout,
@@ -41,9 +42,9 @@ app.get("/health", async (_request, reply) => {
 
 app.get("/", async (_request, reply) => {
   return reply.status(200).send({
-    message: "Amzi Loci API — Phase 7",
+    message: "Amzi Loci API — Phase 8",
     service: "amzi-loci",
-    version: "0.8.0",
+    version: "0.9.0",
   });
 });
 
@@ -186,6 +187,36 @@ app.post("/variations/generate", async (request, reply) => {
   } catch (err) {
     request.log.error(err);
     return reply.status(502).send({ error: err instanceof Error ? err.message : "Variation generation failed" });
+  }
+});
+
+app.post("/content/listing-copy", async (request, reply) => {
+  const apiKey = request.headers["x-amzi-provider-key"];
+  if (!apiKey || typeof apiKey !== "string") {
+    return reply.status(401).send({ error: "Missing BYOK API key header" });
+  }
+  const { brandKit, insights, productContext, provider } = request.body ?? {};
+  const validationError = validateBrandKit(brandKit);
+  if (validationError) return reply.status(400).send({ error: validationError });
+  if (!Array.isArray(insights) || insights.length === 0) {
+    return reply.status(400).send({ error: "insights array is required" });
+  }
+  if (!productContext?.trim()) {
+    return reply.status(400).send({ error: "productContext is required" });
+  }
+  if (!PROVIDERS.includes(provider)) return reply.status(400).send({ error: "Invalid provider" });
+  try {
+    const result = await generateListingCopy(
+      { brandKit, insights, productContext, provider },
+      apiKey.trim(),
+      provider,
+    );
+    return reply.status(200).send(result);
+  } catch (err) {
+    request.log.error(err);
+    return reply
+      .status(502)
+      .send({ error: err instanceof Error ? err.message : "Listing copy generation failed" });
   }
 });
 
