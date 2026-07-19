@@ -114,6 +114,17 @@ export const BYOK_COST_GUARDRAILS = [
   "Typical all-in AI cost: $2–8 per listing depending on reviews and image tier.",
 ] as const;
 
+/** Recommended single-key preset for client work — alias of `simplest`. */
+export const CLIENT_SINGLE_PROVIDER_PRESET_ID: ByokPresetId = "simplest";
+
+export function getClientSingleProviderPreset(): ByokPreset {
+  const preset = getByokPreset(CLIENT_SINGLE_PROVIDER_PRESET_ID);
+  if (!preset) {
+    throw new Error("Client single-provider preset not found");
+  }
+  return preset;
+}
+
 export function getByokPreset(id: ByokPresetId): ByokPreset | undefined {
   return BYOK_PRESETS.find((p) => p.id === id);
 }

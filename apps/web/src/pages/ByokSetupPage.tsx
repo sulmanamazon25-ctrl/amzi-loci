@@ -3,6 +3,8 @@ import {
   BYOK_PRESETS,
   BYOK_PROVIDER_LINKS,
   BYOK_TASK_MATRIX,
+  CLIENT_SINGLE_PROVIDER_PRESET_ID,
+  getClientSingleProviderPreset,
   type ByokPresetId,
 } from "@amzi-loci/shared";
 import { Check, ExternalLink, Key, X } from "lucide-react";
@@ -10,7 +12,6 @@ import { PageMeta } from "../components/layout/PageMeta";
 import { Hero } from "../components/marketing/Hero";
 import { ButtonLink } from "../components/ui/button";
 import { Badge, Card, Panel } from "../components/ui/card";
-import { cn } from "../lib/utils";
 
 const PROVIDER_LABELS = {
   anthropic: "Anthropic",
@@ -19,40 +20,72 @@ const PROVIDER_LABELS = {
 } as const;
 
 export function ByokSetupPage() {
+  const clientPreset = getClientSingleProviderPreset();
+  const advancedPresets = BYOK_PRESETS.filter((p) => p.id !== CLIENT_SINGLE_PROVIDER_PRESET_ID);
+
   return (
     <>
       <PageMeta
         title="BYOK Setup"
-        description="Cost-effective API key setup for Amzi Loci — Google, OpenAI, and Anthropic presets for insights, copy, and images."
+        description="One Google API key for the full Amzi Loci workflow — insights, copy, and images. Cost-effective client setup guide."
         path="/byok-setup"
       />
       <Hero
         badge="Bring your own keys"
-        title="Set up API keys in minutes"
-        subtitle="Amzi Loci uses your Anthropic, OpenAI, and Google keys for AI calls. Keys stay in Windows Credential Manager. Google is required for listing images."
+        title="One key for clients: Google AI"
+        subtitle="Add a single Google key to run all six workflow steps — insights, listing copy, and listing images. Typical cost $3–6 per listing. Keys stay in Windows Credential Manager."
         primaryCta={{ to: "/download", label: "Download desktop app" }}
-        secondaryCta={{ to: "/faq", label: "FAQ" }}
+        secondaryCta={{ to: "/getting-started", label: "Getting started" }}
       />
 
       <section className="container-page pb-12">
-        <h2 className="text-heading font-semibold">Pick a preset</h2>
-        <p className="mt-2 max-w-2xl text-body text-text-muted">
-          Choose based on cost and quality. You can change providers per step in the desktop app.
-        </p>
-        <div className="mt-8 grid gap-4 lg:grid-cols-3">
-          {BYOK_PRESETS.map((preset) => (
-            <Card
-              key={preset.id}
-              className={cn(
-                "flex flex-col",
-                preset.id === "simplest" && "ring-1 ring-primary/40",
-              )}
+        <Card className="ring-1 ring-primary/40">
+          <Badge tone="primary" className="mb-3 w-fit">
+            Recommended for clients
+          </Badge>
+          <h2 className="text-heading font-semibold">{clientPreset.name}</h2>
+          <p className="mt-2 max-w-2xl text-body text-text-muted">{clientPreset.tagline}</p>
+          <p className="mt-4 text-display font-semibold">{clientPreset.estimatedCostUsd}</p>
+          <p className="text-caption text-text-muted">typical per listing</p>
+          <ul className="mt-4 space-y-2 text-body text-text-muted">
+            <li>
+              <strong className="text-text">Text:</strong> Google Gemini ({clientPreset.textModel})
+            </li>
+            <li>
+              <strong className="text-text">Images:</strong> Google Imagen Fast ({clientPreset.imageTier})
+            </li>
+            <li>
+              <strong className="text-text">Keys needed:</strong> Google only
+            </li>
+          </ul>
+          <p className="mt-4 text-body text-text-muted">{clientPreset.bestFor}</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href={BYOK_PROVIDER_LINKS.google.signupUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-body font-medium text-primary-hover hover:underline"
             >
-              {preset.id === "simplest" && (
-                <Badge tone="primary" className="mb-3 w-fit">
-                  Recommended
-                </Badge>
-              )}
+              Get Google API key <ExternalLink size={14} />
+            </a>
+          </div>
+          <Panel className="mt-6 border-primary/20 bg-primary/5">
+            <p className="text-body text-text-muted">
+              <strong className="text-text">Enable billing</strong> on your Google Cloud project before
+              generating images — free-tier-only accounts often fail at the image step.
+            </p>
+          </Panel>
+        </Card>
+      </section>
+
+      <section className="container-page pb-12">
+        <h2 className="text-heading font-semibold">Advanced presets</h2>
+        <p className="mt-2 max-w-2xl text-body text-text-muted">
+          Optional multi-key setups if you want lower text cost or premium copy quality.
+        </p>
+        <div className="mt-8 grid gap-4 lg:grid-cols-2">
+          {advancedPresets.map((preset) => (
+            <Card key={preset.id} className="flex flex-col">
               <h3 className="text-section font-medium">{preset.name}</h3>
               <p className="mt-1 text-body text-text-muted">{preset.tagline}</p>
               <p className="mt-4 text-display font-semibold">{preset.estimatedCostUsd}</p>
@@ -164,9 +197,8 @@ export function ByokSetupPage() {
               <strong className="text-text">Save</strong>.</li>
             <li>Keys are stored in Windows Credential Manager — not on our servers.</li>
             <li>
-              For the{" "}
-              <strong className="text-text">Simplest</strong> preset, only Google is required to complete
-              all six workflow steps.
+              For client work, add <strong className="text-text">Google only</strong> — one key covers
+              all six workflow steps. Enable billing for image generation.
             </li>
           </ol>
           <div className="mt-6 flex flex-wrap gap-3">

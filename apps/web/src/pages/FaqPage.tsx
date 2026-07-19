@@ -5,16 +5,20 @@ import { Panel } from "../components/ui/card";
 
 const FAQ_ITEMS = [
   {
+    q: "Can I use one API key for everything?",
+    a: "Yes — Google AI is the only single key that covers the full workflow (insights, copy, and listing images). Typical cost $3–6 per listing with Imagen Fast. Enable billing on your Google Cloud project for images.",
+  },
+  {
     q: "How do I install the desktop app?",
     a: "Download Setup.exe from the Download page or follow our Getting Started guide for one-click install, SmartScreen tips, and your first project walkthrough.",
   },
   {
     q: "What is Product Video?",
-    a: "A desktop sidebar tool that builds Basic (~30–45s) or Complete (~60–90s) storyboards from your project — review insights, copy, and image hints for Amazon-style product videos. Complete mode requires Pro+.",
+    a: "A desktop sidebar tool that builds Basic (~30–45s) or Complete (~60–90s) storyboards from your project — review insights, copy, and image hints. It does not render finished video files; export the storyboard and edit in your video tool. Complete mode requires Pro+.",
   },
   {
     q: "What is BYOK?",
-    a: "Bring Your Own Key. You add Anthropic, OpenAI, and/or Google API keys in Settings. Keys stay in Windows Credential Manager. Google is required for listing images. See our BYOK setup guide for cost-effective presets.",
+    a: "Bring Your Own Key. For clients, add one Google API key in Settings — it covers insights, copy, and images. Keys stay in Windows Credential Manager. See our BYOK setup guide.",
   },
   {
     q: "Do you store my listing data?",
@@ -84,8 +88,8 @@ export function FaqPage() {
         <Panel>
           <h2 className="text-section font-medium">Need help choosing API keys?</h2>
           <p className="mt-2 text-body text-text-muted">
-            We recommend the Simplest preset (Google only) to start, or Budget (OpenAI + Google) for
-            lower text cost.
+            For clients, use one Google key (Simplest preset). Advanced setups can mix OpenAI or
+            Anthropic for text plus Google for images.
           </p>
           <Link
             to="/byok-setup"

@@ -34,7 +34,7 @@ export function GettingStartedPage() {
       <Hero
         badge="Setup guide"
         title="Install in 5 steps"
-        subtitle="Professional one-click install for Windows 10/11. No server setup on your PC — only API keys from Google, OpenAI, or Anthropic."
+        subtitle="Professional one-click install for Windows 10/11. One Google API key covers the full workflow — enable billing for images."
         primaryCta={{ to: "/download", label: "Download Setup.exe" }}
         secondaryCta={{ to: "/byok-setup", label: "API key guide" }}
       />

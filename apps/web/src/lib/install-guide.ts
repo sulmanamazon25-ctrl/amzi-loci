@@ -21,8 +21,8 @@ export const INSTALL_STEPS = [
   },
   {
     step: 4,
-    title: "Add API keys (BYOK)",
-    body: "Open Settings → BYOK API Keys. For the simplest path, add one Google AI key (covers text + images). Test each key, then Save.",
+    title: "Add your Google API key (BYOK)",
+    body: "Open Settings → Google AI. Paste one Google key, click Test, then Save. Enable billing on your Google Cloud project for image generation. Anthropic/OpenAI are optional.",
     link: { label: "BYOK setup guide", href: "/byok-setup" },
   },
   {

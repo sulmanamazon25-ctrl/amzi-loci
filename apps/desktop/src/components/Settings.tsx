@@ -11,7 +11,9 @@ import {
 import type { LicenseValidation } from "@amzi-loci/shared";
 import {
   APP_VERSION,
+  BYOK_PROVIDER_LINKS,
   formatReleaseRelativeDate,
+  getClientSingleProviderPreset,
   getLatestRelease,
 } from "@amzi-loci/shared";
 import { LicensePanel } from "./LicensePanel";
@@ -138,9 +140,45 @@ export function Settings({
     statuses.find((item) => item.provider === provider);
 
   const latestRelease = getLatestRelease();
+  const clientPreset = getClientSingleProviderPreset();
+  const googleSaved = statusFor("google")?.saved ?? false;
+  const byokGuideUrl = "https://amziloci.com/byok-setup";
 
   return (
     <section className="settings">
+      <div className="provider-card">
+        <div className="provider-header">
+          <div>
+            <h2>Recommended setup</h2>
+            <p className="muted">
+              Clients: add <strong>Google only</strong> — one key covers insights, copy, and images (
+              {clientPreset.estimatedCostUsd} typical per listing).
+            </p>
+          </div>
+          {googleSaved ? (
+            <span className="status-badge status-connected">Google key ready</span>
+          ) : (
+            <span className="status-badge status-disconnected">Add Google key</span>
+          )}
+        </div>
+        <ol className="mt-2 list-decimal space-y-1 pl-5 text-body">
+          <li>
+            Create a key at{" "}
+            <a href={BYOK_PROVIDER_LINKS.google.signupUrl} target="_blank" rel="noopener noreferrer">
+              Google AI Studio
+            </a>{" "}
+            and enable billing for image generation.
+          </li>
+          <li>Paste below → Test key → Save to keychain.</li>
+          <li>Leave Anthropic/OpenAI empty unless you use advanced presets.</li>
+        </ol>
+        <p className="mt-3">
+          <a href={byokGuideUrl} target="_blank" rel="noopener noreferrer">
+            Full BYOK setup guide →
+          </a>
+        </p>
+      </div>
+
       <div className="provider-card">
         <div className="provider-header">
           <div>

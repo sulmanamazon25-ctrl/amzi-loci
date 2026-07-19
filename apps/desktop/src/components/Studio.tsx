@@ -29,7 +29,7 @@ export function Studio() {
   const [section, setSection] = useState<StudioSection>("aplus");
   const [productContext, setProductContext] = useState("");
   const [brandKitId, setBrandKitId] = useState<string>("");
-  const [provider, setProvider] = useState<ApiProvider>("anthropic");
+  const [provider, setProvider] = useState<ApiProvider>("google");
   const [insights, setInsights] = useState<ProductInsight[]>([]);
   const [imageTier, setImageTier] = useState<ImageTier>("gemini-flash");
   const [kits, setKits] = useState<Array<{ id: string; name: string }>>([]);

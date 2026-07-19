@@ -66,7 +66,7 @@ export function useProjectWorkflow(projectId: string) {
   const [step, setStep] = useState<WizardStep>("ingest");
   const [reviewText, setReviewText] = useState("");
   const [reviews, setReviews] = useState<string[]>([]);
-  const [provider, setProvider] = useState<ApiProvider>("anthropic");
+  const [provider, setProvider] = useState<ApiProvider>("google");
   const [insights, setInsights] = useState<ProductInsight[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,7 +75,7 @@ export function useProjectWorkflow(projectId: string) {
   const [selectedBrandKitId, setSelectedBrandKitId] = useState<string | null>(null);
   const [brandKit, setBrandKit] = useState<BrandKit | null>(null);
   const [listingCopy, setListingCopy] = useState<ListingCopy | null>(null);
-  const [imageTier, setImageTier] = useState<ImageTier>("gemini-flash");
+  const [imageTier, setImageTier] = useState<ImageTier>("imagen-fast");
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [generateProgress, setGenerateProgress] = useState<string | null>(null);
   const [regeneratingId, setRegeneratingId] = useState<string | null>(null);
