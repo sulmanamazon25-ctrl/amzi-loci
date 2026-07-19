@@ -21,15 +21,16 @@ export const WORKFLOW_STEPS = [
 
 export const NAV_LINKS = [
   { to: "/features", label: "Features" },
+  { to: "/guide", label: "How it works" },
   { to: "/pricing", label: "Pricing" },
   { to: "/for-agencies", label: "Agencies" },
-  { to: "/getting-started", label: "Getting started" },
   { to: "/download", label: "Download" },
 ] as const;
 
 export const FOOTER_LINKS = {
   product: [
     { to: "/features", label: "Features" },
+    { to: "/guide", label: "How it works" },
     { to: "/pricing", label: "Pricing" },
     { to: "/getting-started", label: "Getting started" },
     { to: "/download", label: "Download" },

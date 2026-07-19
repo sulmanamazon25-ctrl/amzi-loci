@@ -14,6 +14,7 @@ import { TermsPage } from "./pages/TermsPage";
 import { ByokSetupPage } from "./pages/ByokSetupPage";
 import { ChangelogPage } from "./pages/ChangelogPage";
 import { GettingStartedPage } from "./pages/GettingStartedPage";
+import { ProductionGuidePage } from "./pages/ProductionGuidePage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/download" element={<DownloadPage />} />
             <Route path="/getting-started" element={<GettingStartedPage />} />
+            <Route path="/guide" element={<ProductionGuidePage />} />
             <Route path="/for-agencies" element={<AgenciesPage />} />
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/byok-setup" element={<ByokSetupPage />} />

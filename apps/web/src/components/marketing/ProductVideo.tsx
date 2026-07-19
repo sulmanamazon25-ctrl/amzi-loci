@@ -1,12 +1,17 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Play } from "lucide-react";
 import { cn } from "../../lib/utils";
+import { AiCreationHero } from "./AiCreationHero";
 
 const VIDEO_SRC =
   import.meta.env.VITE_PRODUCT_VIDEO_URL ?? "/video/amzi-loci-hero.mp4";
 const POSTER_SRC =
   import.meta.env.VITE_PRODUCT_VIDEO_POSTER ?? "/video/amzi-loci-hero-poster.svg";
 const CAPTIONS_SRC = "/video/amzi-loci-hero.vtt";
+
+/** Set true when hero MP4 is uploaded to public/video/ */
+const HAS_HERO_VIDEO = Boolean(import.meta.env.VITE_PRODUCT_VIDEO_URL);
 
 type ProductVideoProps = {
   title?: string;
@@ -21,21 +26,13 @@ export function ProductVideo({
 }: ProductVideoProps) {
   const [failed, setFailed] = useState(false);
 
-  if (failed) {
+  if (!HAS_HERO_VIDEO || failed) {
     return (
-      <div
-        className={cn(
-          "flex aspect-video items-center justify-center rounded-card border border-border bg-surface text-body text-text-muted",
-          className,
-        )}
-      >
-        <p>
-          Product overview video coming soon.{" "}
-          <a href="/features" className="text-primary-hover hover:underline">
-            Explore features
-          </a>
-        </p>
-      </div>
+      <AiCreationHero
+        className={className}
+        title={compact ? undefined : title}
+        showTitle={!compact}
+      />
     );
   }
 
@@ -65,9 +62,13 @@ export function ProductVideo({
       {!compact && (
         <figcaption className="text-caption text-text-muted">
           Reviews to upload pack — export-first workflow.{" "}
-          <a href="/byok-setup" className="text-primary-hover hover:underline">
+          <Link to="/guide" className="text-primary-hover hover:underline">
+            Production guide
+          </Link>
+          {" · "}
+          <Link to="/byok-setup" className="text-primary-hover hover:underline">
             BYOK setup guide
-          </a>
+          </Link>
         </figcaption>
       )}
     </figure>

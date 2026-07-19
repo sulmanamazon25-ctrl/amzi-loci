@@ -36,6 +36,11 @@ export function HomePage() {
 
       <section className="container-page pb-16">
         <ProductVideo title="See how it works" />
+        <p className="mt-4 text-body">
+          <Link to="/guide" className="font-medium text-primary-hover hover:underline">
+            Full production guide →
+          </Link>
+        </p>
       </section>
 
       <section className="container-page pb-20">
